@@ -1,0 +1,43 @@
+:root{
+    --primary-color:rgb(20 44 143);
+    --secondary-color:rgb(189 221 243);
+}
+header{
+    background-color: var(--primary-color);
+    color:var(--secondary-color);
+    width: 100%;
+}
+.header-main{
+ display:flex; 
+ justify-content:space-between;
+ align-items: center;
+ padding:20px 200px;
+}
+
+.sub_header{
+    display:flex; 
+    align-items: center;
+}
+.sub_header>div{
+    margin-right:20px;
+    padding: 10px 12px;
+    border-radius: 50px;
+}
+
+.sub_header>.active{
+    color:white;
+    background-color: rgba(255, 255, 255, 0.326);
+}
+
+
+
+
+
+.btn{
+    width:20px;
+    
+}
+.btn>svg{
+    fill:var(--secondary-color);
+
+}
