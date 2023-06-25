@@ -66,6 +66,29 @@ function Activity() {
                         })
                     }
                 }
+                else if(filter==="Date"){
+                    var curr_date=new Date();
+                    curr_date.setHours(0);
+                    curr_date.setMinutes(0);
+                    curr_date.setSeconds(0);
+                    curr_date=curr_date.getTime();
+
+                    var cat=Filters[filter].options[Filters[filter].selected];  // cat => category
+                    if (cat==="Last 30 days"){
+                        temp_items=items.filter((item)=>{
+                            var item_date=new Date(item.date).getTime();
+                            
+                            return ((curr_date-item_date)<=(1000*60*60*24*30));
+                        })
+                    }
+                    else if(cat==="Last 90 days"){
+                        temp_items=items.filter((item)=>{
+                            var item_date=new Date(item.date).getTime();
+                            return ((curr_date-item_date)<=(1000*60*60*24*90));
+                        })
+                    }
+                    
+                }
                 // setSelectedItems()
                 return temp_items;
             }
@@ -88,12 +111,14 @@ function Activity() {
     function changeFilter(event){
         // console.log("changeFilter");
         var option=event.target?.innerHTML;
-        var filter=event.target?.closest(".filter_btn").querySelector("button").innerHTML;
+        var filter_btn=event.target?.closest(".filter_btn").querySelector("button");
+        var filter=filter_btn.innerHTML;
         // console.log(filter,":",option);
         var filters=Filters;
         filters[filter].selected=(filters[filter].options.indexOf(option));
         setFilters(filters);
         settest(JSON.stringify(filters));
+        // filter_btn.innerText=filter_btn.innerText+":"+option;
         // console.log(Filters);
     }
     function create_card(item){
