@@ -16,8 +16,11 @@
 .activity_box{
     display: flex;
     justify-content: center;  
-    width: 1075px;  
+    flex-direction: column;
+    width: 100%;  
     margin-top: 50px;
+    padding:0 400px;
+    box-sizing: border-box;
 }
 .first{
     display: flex;
@@ -41,4 +44,97 @@
     font-size: large;
 
 }
+.second{
+    flex-direction: column;
+    align-items: flex-start;
+    display: flex;
+    margin-top: 24px;
+}
+.filter_btn_container{
+    margin-top: 15px;
+    display: flex;
 
+}
+.filter_btn{
+    position: relative;
+    margin-right: 70px;
+}
+.filter_btn>button{
+    color: var(--primary-color);
+    
+    padding: 9px 11px;
+    border-radius: 50px;
+    background-color: white;
+    outline: none;
+    border: 1px solid gray;
+}
+.filter_btn>button.active{
+    border:none;
+    background-color: rgb(209 242 255);
+}
+.filter_btn>.options{
+    display:flex;
+    flex-direction: column;
+    border: 1px solid gray;
+    background-color: white;
+    width: fit-content;
+    position: absolute;
+    bottom: 0%;
+    left:50%;
+    transform: translate(-50%,100%);
+}
+.filter_btn>.options.hidden{
+    display: none;
+}
+.filter_btn>.options>button{
+    background-color: white;
+    outline: none;
+    border:none;
+    display: flex;
+    justify-content: center;
+    padding: 10px 4px;
+    width: max-content;
+    
+}
+
+.card{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border:2px solid #e9e9e9;
+    border-radius: 10px;
+    padding: 15px 35px;
+    text-align: left;
+    height:60px;
+    margin:35px 0px;
+}
+.card>.main{
+    height: inherit;
+    display: flex;
+    align-items: center;
+
+}
+
+.card>.main>.details{
+    padding: 0px 20px;
+}
+.card>.main>img{
+    border-radius: 50%;
+    height:inherit;
+}
+
+.sub_detail{
+    display: flex;
+}
+
+.sub_detail >p{
+    margin-right:5px;
+}
+
+.value{
+    display: flex;
+    align-items: flex-start;
+    flex-direction: column ;
+    height: 100%;
+    padding-top: 18px;
+}
