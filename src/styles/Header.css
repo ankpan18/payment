@@ -41,3 +41,20 @@ header{
     fill:var(--secondary-color);
 
 }
+
+@media only screen and (max-width: 1235px) {
+
+    .sub_header {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+    .header-main {
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        align-items: center;
+        padding: 0px;
+    }
+     
+  }
