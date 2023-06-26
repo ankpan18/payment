@@ -26,99 +26,93 @@ function Activity() {
         
     },[test]);
 
+    function filterDate(item){
+        var filter=Filters['Date'];
+        if(filter.selected===-1) return true;
+        
+        var curr_date=new Date();
+        curr_date.setHours(0);
+        curr_date.setMinutes(0);
+        curr_date.setSeconds(0);
+        curr_date=curr_date.getTime();
+
+        var cat=filter.options[filter.selected];  // cat => category
+        if (cat==="Last 30 days"){
+            var item_date=new Date(item.date).getTime();
+            return ((curr_date-item_date)<=(1000*60*60*24*30));
+        
+        }
+        else if(cat==="Last 90 days"){
+            var item_date=new Date(item.date).getTime();
+            return ((curr_date-item_date)<=(1000*60*60*24*90));
+
+        }
+
+    }
+    function filterStatus(item){
+        var filter=Filters['Status'];
+        if(filter.selected===-1) return true;
+        var cat=filter.options[filter.selected];  // cat => category
+        if (cat==="pending"){
+            return (item.status==="pending");            
+        }
+        else if(cat==="completed"){
+            return (item.status==="completed");
+        }
+        else if(cat==="failed"){
+                return (item.status==="failed");
+        }
+    }
+    function filterType(item){
+        var filter=Filters['Type'];
+        if(filter.selected===-1) return true;
+        var cat=filter.options[filter.selected];  // cat => category
+        if (cat==="Sent"){
+            return (item.type==="sent");
+        }
+        else if(cat==="Received"){
+            return (item.type==="received");
+        }
+    }
+
     function filterItems(){
         
-        var cat="";
-        var final_items=Object.keys(Filters).map((filter)=>{
-            var temp_items=[];
-            // {console.log(filter);}
-            if(Filters[filter].selected!==-1){
-                // {console.log(filter);}
-                if(filter==="Type"){
-                    var cat=Filters[filter].options[Filters[filter].selected];  // cat => category
-                    if (cat==="Sent"){
-                        temp_items=items.filter((item)=>{
-                        return (item.type==="sent");
-                        })
-                    }
-                    else if(cat==="Received"){
-                        temp_items=items.filter((item)=>{
-                        return (item.type==="received");
-                        })
-                    }
-                    // console.log(temp);
-                }
-                else if(filter==="Status"){
-                    var cat=Filters[filter].options[Filters[filter].selected];  // cat => category
-                    if (cat==="pending"){
-                        temp_items=items.filter((item)=>{
-                            return (item.status==="pending");
-                        })
-                    }
-                    else if(cat==="completed"){
-                        temp_items=items.filter((item)=>{
-                            return (item.status==="completed");
-                        })
-                    }
-                    else if(cat==="failed"){
-                        temp_items=items.filter((item)=>{
-                            return (item.status==="failed");
-                        })
-                    }
-                }
-                else if(filter==="Date"){
-                    var curr_date=new Date();
-                    curr_date.setHours(0);
-                    curr_date.setMinutes(0);
-                    curr_date.setSeconds(0);
-                    curr_date=curr_date.getTime();
-
-                    var cat=Filters[filter].options[Filters[filter].selected];  // cat => category
-                    if (cat==="Last 30 days"){
-                        temp_items=items.filter((item)=>{
-                            var item_date=new Date(item.date).getTime();
-                            
-                            return ((curr_date-item_date)<=(1000*60*60*24*30));
-                        })
-                    }
-                    else if(cat==="Last 90 days"){
-                        temp_items=items.filter((item)=>{
-                            var item_date=new Date(item.date).getTime();
-                            return ((curr_date-item_date)<=(1000*60*60*24*90));
-                        })
-                    }
-                    
-                }
-                // setSelectedItems()
-                return temp_items;
-            }
-            else{
-                return items;
-            }
+        var final_items=items.filter((item)=>{
+            return (filterDate(item)&&filterStatus(item)&&filterType(item))
         })
         
-        var final_final_items = final_items[0].filter(value => final_items[1].includes(value));
-        final_final_items = final_final_items.filter(value => final_items[2].includes(value));
-
-        // for final_items
-        console.log(final_final_items);
-        setSelectedItems(final_final_items);
+        console.log(final_items);
+        setSelectedItems(final_items);
     }
     function toggle_options(event){
         event.target?.closest(".filter_btn").querySelector(".options").classList.toggle("hidden");
         
+        if(event.target?.hasAttribute("data-filter")){
+            var filter=event.target;
+            filter.classList.remove("active");
+            filter.innerText=filter.dataset.filter;
+            var filters=Filters;
+            filters[filter.dataset.filter].selected=-1;
+            setFilters(filters);
+            settest(JSON.stringify(filters));
+        }
+        
+        
     }
     function changeFilter(event){
         // console.log("changeFilter");
-        var option=event.target?.innerHTML;
+        var option=event.target?.dataset.option;
         var filter_btn=event.target?.closest(".filter_btn").querySelector("button");
-        var filter=filter_btn.innerHTML;
+        var filter=filter_btn.dataset.filter;
+
+        // console.log("option");
+        filter_btn.classList.add("active");
         // console.log(filter,":",option);
         var filters=Filters;
         filters[filter].selected=(filters[filter].options.indexOf(option));
         setFilters(filters);
         settest(JSON.stringify(filters));
-        // filter_btn.innerText=filter_btn.innerText+":"+option;
+        filter_btn.innerText=filter+":"+option;
         // console.log(Filters);
     }
     function create_card(item){
@@ -139,7 +133,7 @@ function Activity() {
           </div>
 
           <div className="value">
-            <b>${item['payment']}</b>
+            <b>{(item['type']==="received")?"+":"-"}${item['payment']}</b>
           </div>
         </div>
         );
@@ -166,12 +160,12 @@ function Activity() {
             var filter_details=Filters[filter];
             return (
                 <div key={filter} className="filter_btn" onClick={toggle_options}>
-                    <button className="active">{filter}</button>
+                    <button data-filter={filter}>{filter}</button>
                     <div className="options hidden">
                         {
                         filter_details.options.map((option,idx)=>{
                             return(
-                                <button key={idx} onClick={changeFilter} className="active">{option}</button>
+                                <button key={idx} onClick={changeFilter} data-option={option}>{option}</button>
                                 
                             )            
                             })
